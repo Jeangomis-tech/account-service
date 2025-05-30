@@ -1,12 +1,14 @@
 package com.jcg.account_service.mappers;
 
-import com.jcg.account_service.domaines.Account;
-import com.jcg.account_service.domaines.AccountType;
+import com.jcg.account_service.domaines.account.Account;
+import com.jcg.account_service.domaines.account.AccountType;
 import com.jcg.account_service.dtos.AccountRequest;
 import com.jcg.account_service.dtos.AccountResponse;
+import lombok.Data;
 import org.springframework.stereotype.Component;
 
 @Component
+@Data
 public class AccountMapper {
   public  AccountResponse toDto(Account account) {
        return new AccountResponse(
@@ -18,10 +20,9 @@ public class AccountMapper {
        );
     }
    public Account toEntity(AccountRequest dto) {
-        return Account.builder()
-                .accountNumber(dto.accountNumber())
-                .balance(dto.balance())
-                .type( AccountType.valueOf(dto.type().toUpperCase()))
-                .build();
+       Account account = new Account();
+       account.setBalance(dto.balance());
+       account.setType(AccountType.valueOf(dto.type().toUpperCase()));
+       return account;
     }
 }
