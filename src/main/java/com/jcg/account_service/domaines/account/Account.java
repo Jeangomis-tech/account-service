@@ -1,5 +1,6 @@
-package com.jcg.account_service.domaines;
+package com.jcg.account_service.domaines.account;
 
+import com.jcg.account_service.domaines.customer.Customer;
 import jakarta.persistence.*;
 import lombok.*;
 
