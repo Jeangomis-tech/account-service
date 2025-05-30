@@ -1,16 +1,15 @@
 package com.jcg.account_service.services.impl;
 
-import com.jcg.account_service.domaines.Account;
+import com.jcg.account_service.domaines.account.Account;
 import com.jcg.account_service.dtos.AccountRequest;
 import com.jcg.account_service.dtos.AccountResponse;
 import com.jcg.account_service.mappers.AccountMapper;
 import com.jcg.account_service.repositories.AccountRepository;
 import com.jcg.account_service.services.AccountService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class AccountServiceImpl implements AccountService {
@@ -26,6 +25,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     public Long addAccount(AccountRequest dto) {
         Account account = accountMapper.toEntity(dto);
+        account.setAccountNumber(generateAccountNumber());
         Account savedAccount = accountRepository.save(account);
         return savedAccount.getId();
 
@@ -45,12 +45,17 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public Long getAccount(Long id) {
-        return null;
+    public AccountResponse getAccount(Long id) {
+        Account account = accountRepository.findById(id).orElseThrow(() -> new RuntimeException("Account with id" + id +" not found"));
+        return accountMapper.toDto(account);
     }
 
     @Override
     public List<AccountResponse> getAllAccount() {
-        return List.of();
+        List<Account> accounts = accountRepository.findAll();
+        return accounts.stream().map(accountMapper::toDto).toList();
+    }
+    private String generateAccountNumber() {
+        return "ACC" +  String.valueOf( System.currentTimeMillis()) +  UUID.randomUUID().toString().substring(0, 8);
     }
 }
