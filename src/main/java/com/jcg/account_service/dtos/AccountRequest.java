@@ -1,11 +1,11 @@
 package com.jcg.account_service.dtos;
 
-import jakarta.validation.constraints.NotBlank;
+
+import jakarta.validation.constraints.NotNull;
 
 public record AccountRequest(
-        String accountNumber,
         String type,
         Double balance,
-        @NotBlank(message = "customer id can not be blank")Long customerId
+        @NotNull(message = "customer id have to be set")Long customerId
         ) {
 }
