@@ -1,6 +1,8 @@
 package com.jcg.account_service.services.impl;
 
 import com.jcg.account_service.domaines.account.Account;
+import com.jcg.account_service.domaines.customer.Customer;
+import com.jcg.account_service.domaines.customer.CustomerClient;
 import com.jcg.account_service.dtos.AccountRequest;
 import com.jcg.account_service.dtos.AccountResponse;
 import com.jcg.account_service.mappers.AccountMapper;
@@ -16,18 +18,26 @@ public class AccountServiceImpl implements AccountService {
 
     private final AccountRepository accountRepository;
     private final AccountMapper accountMapper;
+    private final CustomerClient client;
 
-    public AccountServiceImpl(AccountRepository accountRepository, AccountMapper accountMapper) {
+    public AccountServiceImpl(AccountRepository accountRepository, AccountMapper accountMapper, CustomerClient client) {
         this.accountRepository = accountRepository;
         this.accountMapper = accountMapper;
+        this.client = client;
     }
 
     @Override
     public Long addAccount(AccountRequest dto) {
+        Customer customer = client.getCustomerById(dto.customerId());
+        if(customer == null) {
+            throw new IllegalArgumentException("Customer not found");
+        }
+        System.out.println(customer.getEmail() + " " + customer.getFirstName() + " " + customer.getLastName());
         Account account = accountMapper.toEntity(dto);
         account.setAccountNumber(generateAccountNumber());
-        Account savedAccount = accountRepository.save(account);
-        return savedAccount.getId();
+//        Account savedAccount = accountRepository.save(account);
+//        return savedAccount.getId();
+        return 1L;
 
     }
 
